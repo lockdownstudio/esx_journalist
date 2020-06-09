@@ -1,5 +1,5 @@
 Config        = {}
-Config.Locale = 'fr'
+Config.Locale = 'en'
 Config.debug  = true
 
 Config.platePrefix = "WEAZEL"
@@ -22,8 +22,8 @@ Config.iCompanyRate  = 0.1
 
 
 Config.jItemTime     = 2500
-Config.jItemDb_name  = "journaux"
-Config.jItemName     = "Paquet de journaux"
+Config.jItemDb_name  = "newspapers"
+Config.jItemName     = "Newspaper Package"
 Config.jItemAdd      = 1
 Config.jItemRemove   = 1
 Config.jItemPrice    = 62
