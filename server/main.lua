@@ -3,18 +3,18 @@ ESX                = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 if Config.MaxInService ~= -1 then
-  TriggerEvent('esx_service:activateService', 'journaliste', Config.MaxInService)
+  TriggerEvent('esx_service:activateService', 'journalist', Config.MaxInService)
 end
 
-TriggerEvent('esx_phone:registerNumber', 'journaliste', 'Contacter un journaliste', true, true)
-TriggerEvent('esx_society:registerSociety', 'journaliste', 'journaliste', 'society_journaliste', 'society_journaliste', 'society_journaliste', {type = 'private'})
+TriggerEvent('esx_phone:registerNumber', 'journalist', 'Contact a journalist', true, true)
+TriggerEvent('esx_society:registerSociety', 'journalist', 'journalist', 'society_weazel', 'society_weazel', 'society_weazel', {type = 'private'})
 
-RegisterServerEvent('esx_journaliste:getStockItem')
-AddEventHandler('esx_journaliste:getStockItem', function(itemName, count)
+RegisterServerEvent('esx_journalist:getStockItem')
+AddEventHandler('esx_journalist:getStockItem', function(itemName, count)
 
   local xPlayer = ESX.GetPlayerFromId(source)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_journaliste', function(inventory)
+  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
 
     local item = inventory.getItem(itemName)
 
@@ -31,20 +31,20 @@ AddEventHandler('esx_journaliste:getStockItem', function(itemName, count)
 
 end)
 
-ESX.RegisterServerCallback('esx_journaliste:getStockItems', function(source, cb)
+ESX.RegisterServerCallback('esx_journalist:getStockItems', function(source, cb)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_journaliste', function(inventory)
+  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
     cb(inventory.items)
   end)
 
 end)
 
-RegisterServerEvent('esx_journaliste:putStockItems')
-AddEventHandler('esx_journaliste:putStockItems', function(itemName, count)
+RegisterServerEvent('esx_journalist:putStockItems')
+AddEventHandler('esx_journalist:putStockItems', function(itemName, count)
 
   local xPlayer = ESX.GetPlayerFromId(source)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_journaliste', function(inventory)
+  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
 
     local item = inventory.getItem(itemName)
 
@@ -62,10 +62,10 @@ AddEventHandler('esx_journaliste:putStockItems', function(itemName, count)
 end)
 
 
-ESX.RegisterServerCallback('esx_journaliste:getPlayerInventory', function(source, cb)
+ESX.RegisterServerCallback('esx_journalist:getPlayerInventory', function(source, cb)
 
   local xPlayer    = ESX.GetPlayerFromId(source)
-  local items      = xPlayer.inventory
+  local items      = xPlayer.getInventory()
 
   cb({
     items      = items
@@ -73,10 +73,10 @@ ESX.RegisterServerCallback('esx_journaliste:getPlayerInventory', function(source
 
 end)
 
-ESX.RegisterServerCallback('esx_journaliste:getFineList', function(source, cb, category)
+ESX.RegisterServerCallback('esx_journalist:getFineList', function(source, cb, category)
 
   MySQL.Async.fetchAll(
-    'SELECT * FROM fine_types_journaliste WHERE category = @category',
+    'SELECT * FROM fine_types_journalist WHERE category = @category',
     {
       ['@category'] = category
     },
@@ -87,9 +87,9 @@ ESX.RegisterServerCallback('esx_journaliste:getFineList', function(source, cb, c
 
 end)
 
-ESX.RegisterServerCallback('esx_journaliste:getVaultWeapons', function(source, cb)
+ESX.RegisterServerCallback('esx_journalist:getVaultWeapons', function(source, cb)
 
-  TriggerEvent('esx_datastore:getSharedDataStore', 'society_journaliste', function(store)
+  TriggerEvent('esx_datastore:getSharedDataStore', 'society_weazel', function(store)
 
     local weapons = store.get('weapons')
 
@@ -103,13 +103,13 @@ ESX.RegisterServerCallback('esx_journaliste:getVaultWeapons', function(source, c
 
 end)
 
-ESX.RegisterServerCallback('esx_journaliste:addVaultWeapon', function(source, cb, weaponName)
+ESX.RegisterServerCallback('esx_journalist:addVaultWeapon', function(source, cb, weaponName)
 
   local xPlayer = ESX.GetPlayerFromId(source)
 
   xPlayer.removeWeapon(weaponName)
 
-  TriggerEvent('esx_datastore:getSharedDataStore', 'society_journaliste', function(store)
+  TriggerEvent('esx_datastore:getSharedDataStore', 'society_weazel', function(store)
 
     local weapons = store.get('weapons')
 
@@ -141,13 +141,13 @@ ESX.RegisterServerCallback('esx_journaliste:addVaultWeapon', function(source, cb
 
 end)
 
-ESX.RegisterServerCallback('esx_journaliste:removeVaultWeapon', function(source, cb, weaponName)
+ESX.RegisterServerCallback('esx_journalist:removeVaultWeapon', function(source, cb, weaponName)
 
   local xPlayer = ESX.GetPlayerFromId(source)
 
   xPlayer.addWeapon(weaponName, 1000)
 
-  TriggerEvent('esx_datastore:getSharedDataStore', 'society_journaliste', function(store)
+  TriggerEvent('esx_datastore:getSharedDataStore', 'society_weazel', function(store)
 
     local weapons = store.get('weapons')
 

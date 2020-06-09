@@ -1,4 +1,4 @@
-# ESX_JOURNALISTE
+# ESX_journalist
 
 FXServer ESX REPORTER JOB
 
@@ -13,11 +13,11 @@ FXServer ESX REPORTER JOB
 
 1.	CD in your resources/[esx] folder
 
-2.	Import esx_journaliste.sql in your database
+2.	Import esx_journalist.sql in your database
 
 3.	Add this in your server.cfg :
 
-> start esx_journaliste
+> start esx_journalist
 
 If you want player management you have to set Config.EnablePlayerManagement to true in config.lua You can config VaultManagement with true/false (don't forget to comment the area in the same file)
 

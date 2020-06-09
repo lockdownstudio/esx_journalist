@@ -2,10 +2,10 @@ Locales['fr'] = {
 	-- Cloakroom
 	['cloakroom'] = 'Vestiaire',
 	['citizen_wear'] = 'Tenue civile',
-	['journaliste_outfit'] = 'Tenue de stagiaire',
-	['journaliste_outfit_1'] = 'Tenue de reporter',
-	['journaliste_outfit_2'] = 'Tenue d\'enquêteur',
-	['journaliste_outfit_3'] = 'Tenue de directeur', 
+	['journalist_outfit'] = 'Tenue de stagiaire',
+	['journalist_outfit_1'] = 'Tenue de reporter',
+	['journalist_outfit_2'] = 'Tenue d\'enquêteur',
+	['journalist_outfit_3'] = 'Tenue de directeur', 
     ['no_outfit'] = 'Il n\'y a pas d\'uniforme à votre taille...',
     ['open_cloackroom'] = 'Appuyez sur ~INPUT_CONTEXT~ pour vous changer',
 	

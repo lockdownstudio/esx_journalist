@@ -7,7 +7,7 @@ Config.EnableSocietyOwnedVehicles = false
 Config.EnableHelicopters          = false
 Config.EnableMoneyWash            = true
 Config.MaxInService               = -1
-Config.Locale                     = 'fr'
+Config.Locale                     = 'en'
 
 Config.AuthorizedVehicles = {
 	{ name = 'newsheli',  label = 'Weazel Helicoptere 1' },
@@ -65,7 +65,7 @@ Config.Zones = {
 }
 
 Config.Uniforms = {
-	journaliste_outfit = {
+	journalist_outfit = {
 		male = {
 			['tshirt_1'] = 15,  ['tshirt_2'] = 0,
 			['torso_1'] = 13,   ['torso_2'] = 0,
@@ -85,7 +85,7 @@ Config.Uniforms = {
 			['chain_1'] = 0,  ['chain_2'] = 0
 		}
 	},
-  journaliste_outfit_1 = {
+  journalist_outfit_1 = {
 		male = {
 			['tshirt_1'] = 15,  ['tshirt_2'] = 0,
 			['torso_1'] = 13,   ['torso_2'] = 0,
@@ -105,7 +105,7 @@ Config.Uniforms = {
 			['chain_1'] = 0,  ['chain_2'] = 0
 		}	
 	},
-  journaliste_outfit_2 = {
+  journalist_outfit_2 = {
 		male = {
 			['tshirt_1'] = 15,  ['tshirt_2'] = 0,
 			['torso_1'] = 13,   ['torso_2'] = 0,
@@ -125,7 +125,7 @@ Config.Uniforms = {
 			['chain_1'] = 0,  ['chain_2'] = 0
 		}	
 	},
-  journaliste_outfit_3 = {
+  journalist_outfit_3 = {
 		male = {
 			['tshirt_1'] = 15,  ['tshirt_2'] = 0,
 			['torso_1'] = 13,   ['torso_2'] = 0,
