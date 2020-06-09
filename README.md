@@ -1,34 +1,31 @@
-[![GitHub license](https://img.shields.io/github/license/Artnod-FiveM-Mods/esx_journalist.svg)](https://github.com/Artnod-FiveM-Mods/esx_journalist/blob/master/LICENSE) :small_blue_diamond: 
-[![Discord](https://img.shields.io/discord/436197783331012629.svg)](https://discord.gg/u7dj7Ja)  
+# ESX_JOURNALISTE
 
-# esx_journalist
+FXServer ESX REPORTER JOB
 
-Weazel News Company
+###### REQUIREMENTS
 
-# Requirements
+- Player management (billing and boss actions)
 
-  - esx_society,
-  - esx_billing,
-  - esx_datastore,
-  - esx_phone,
-  - WeazelNewsCam
+	- esx_society => https://github.com/ESX-Org/esx_society
+	- esx_billing => https://github.com/ESX-Org/esx_billing
 
-# Getting Started
+###### INSTALLATION
 
-1. Add ``esx_journalist`` folder into resources
-2. Add in ``server.cfg``
-3. Add ``esx_journalist.sql`` to database
+1.	CD in your resources/[esx] folder
 
-# Configuration
+2.	Import esx_journaliste.sql in your database
 
-1. Configuration only in ``config.lua``
+3.	Add this in your server.cfg :
 
-# Legal
-### License
-Artnod-FiveM-Mods/esx_journalist  
+> start esx_journaliste
 
-This program is licensed under the GNU General Public License v3.0  
+If you want player management you have to set Config.EnablePlayerManagement to true in config.lua You can config VaultManagement with true/false (don't forget to comment the area in the same file)
 
-Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license.  
+###### FEATURES
 
-Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
+- Reporter job
+- Boss, Investigator, Reporter and Trainee grades
+- Cloakroom, Vault, Vehicles, BossActions
+- Cloakroom : Different outfits limited to the equivalent or higher grade
+- Spawning car without dust
+- Billing menu

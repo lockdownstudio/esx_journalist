@@ -1,24 +1,20 @@
-description 'ESX journalist'
+resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
-version '0.5'
+description 'ESX Reporter Job'
 
-dependencies {
-  "esx_society",
-  "esx_billing",
-  "esx_datastore",
-  "gcphone",
+version '1.0.4'
+
+server_scripts {
+  '@mysql-async/lib/MySQL.lua',
+  '@es_extended/locale.lua',
+  'config.lua',
+  'server/main.lua',
+  'locales/fr.lua'
 }
 
 client_scripts {
   '@es_extended/locale.lua',
-  'locales/fr.lua',
   'config.lua',
-  'client/esx_journalist_cl.lua',
-}
-
-server_scripts {
-  '@es_extended/locale.lua',
-  'locales/fr.lua',
-  'config.lua',
-  'server/esx_journalist_sv.lua',
+  'client/main.lua',
+  'locales/fr.lua'  
 }
