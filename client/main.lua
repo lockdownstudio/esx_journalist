@@ -571,11 +571,16 @@ function OpenVehicleSpawnerMenu()
               if canTakeService then
 
                 ESX.Game.SpawnVehicle(model, {
-                  x = vehicles[partNum].SpawnPoint.x,
-                  y = vehicles[partNum].SpawnPoint.y,
-                  z = vehicles[partNum].SpawnPoint.z
-                }, vehicles[partNum].Heading, function(vehicle)
+                  --x = vehicles[partNum].SpawnPoint.x,
+                  --y = vehicles[partNum].SpawnPoint.y,
+                  --z = vehicles[partNum].SpawnPoint.z
+               -- }, vehicles[partNum].Heading, function(vehicle)
                   --TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)  -- teleport into vehicle
+
+                  x = vehicles.SpawnPoint.x,
+                  y = vehicles.SpawnPoint.y,
+                  z = vehicles.SpawnPoint.z
+                }, vehicles.Heading, function(vehicle)
                   SetVehicleMaxMods(vehicle)
                   SetVehicleDirtLevel(vehicle, 0)
                 end)
@@ -584,7 +589,7 @@ function OpenVehicleSpawnerMenu()
                 ESX.ShowNotification(_U('service_max') .. inServiceCount .. '/' .. maxInService)
               end
 
-            end, 'etat')
+            end, 'journalist')
 
           end
 
@@ -766,7 +771,7 @@ Citizen.CreateThread(function()
             wash      = Config.EnableMoneyWash,
           }
 
-          ESX.UI.Menu.CloseAll()
+          -- ESX.UI.Menu.CloseAll()
 
           TriggerEvent('esx_society:openBossMenu', 'journalist', function(data, menu)
 

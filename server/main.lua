@@ -25,7 +25,7 @@ AddEventHandler('esx_journalist:getStockItem', function(itemName, count)
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
     end
 
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.label)
+    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.name)
 
   end)
 
@@ -55,7 +55,7 @@ AddEventHandler('esx_journalist:putStockItems', function(itemName, count)
       TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
     end
 
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_added') .. count .. ' ' .. item.label)
+    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_added') .. count .. ' ' .. item.name)
 
   end)
 
