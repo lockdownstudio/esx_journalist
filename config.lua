@@ -48,6 +48,7 @@ Config.Zones = {
 				{coords = vector3(-547.9, -900.2, 23.0), heading = 170.71, radius = 6.0},
 			}
 		},
+	},
 		
 	Helicopters = {
 		{
