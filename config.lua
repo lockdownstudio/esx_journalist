@@ -37,10 +37,10 @@ Config.Stations = {
 		},
 		Vaults = {
 			vector3(-579.4, -925.2, 22.9)
-		}
+		},
 		VehicleDeleters = {
 			vector3(-532.6, -888.7, 24.0)
-		}				
+		},			
 	
 		Vehicles = {
 			{
