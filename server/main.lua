@@ -7,70 +7,58 @@ if Config.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'journalist', 'Contact a journalist', true, true)
-TriggerEvent('esx_society:registerSociety', 'journalist', 'journalist', 'society_weazel', 'society_weazel', 'society_weazel', {type = 'private'})
+TriggerEvent('esx_society:registerSociety', 'journalist', 'Journalist', 'society_weazel', 'society_weazel', 'society_weazel', {type = 'private'})
 
-RegisterServerEvent('esx_journalist:getStockItem')
+RegisterNetEvent('esx_journalist:getStockItem')
 AddEventHandler('esx_journalist:getStockItem', function(itemName, count)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
 
-  local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
+		local inventoryItem = inventory.getItem(itemName)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
+		-- is there enough in the society?
+		if count > 0 and inventoryItem.count >= count then
 
-    local item = inventory.getItem(itemName)
-
-    if item.count >= count then
-      inventory.removeItem(itemName, count)
-      xPlayer.addInventoryItem(itemName, count)
-    else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
-    end
-
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn') .. count .. ' ' .. item.name)
-
-  end)
-
+			-- can the player carry the said amount of x item?
+			if xPlayer.canCarryItem(itemName, count) then
+				inventory.removeItem(itemName, count)
+				xPlayer.addInventoryItem(itemName, count)
+				xPlayer.showNotification(_U('have_withdrawn', count, inventoryItem.label))
+			else
+				xPlayer.showNotification(_U('quantity_invalid'))
+			end
+		else
+			xPlayer.showNotification(_U('quantity_invalid'))
+		end
+	end)
 end)
 
-ESX.RegisterServerCallback('esx_journalist:getStockItems', function(source, cb)
-
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
-    cb(inventory.items)
-  end)
-
-end)
-
-RegisterServerEvent('esx_journalist:putStockItems')
+RegisterNetEvent('esx_journalist:putStockItems')
 AddEventHandler('esx_journalist:putStockItems', function(itemName, count)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local sourceItem = xPlayer.getInventoryItem(itemName)
 
-  local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
+		local inventoryItem = inventory.getItem(itemName)
 
-  TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
-
-    local item = inventory.getItem(itemName)
-
-    if item.count >= 0 then
-      xPlayer.removeInventoryItem(itemName, count)
-      inventory.addItem(itemName, count)
-    else
-      TriggerClientEvent('esx:showNotification', xPlayer.source, _U('quantity_invalid'))
-    end
-
-    TriggerClientEvent('esx:showNotification', xPlayer.source, _U('you_added') .. count .. ' ' .. item.name)
-
-  end)
-
+		-- does the player have enough of the item?
+		if sourceItem.count >= count and count > 0 then
+			xPlayer.removeInventoryItem(itemName, count)
+			inventory.addItem(itemName, count)
+			xPlayer.showNotification(_U('have_deposited', count, inventoryItem.label))
+		else
+			xPlayer.showNotification(_U('quantity_invalid'))
+		end
+	end)
 end)
 
 
-ESX.RegisterServerCallback('esx_journalist:getPlayerInventory', function(source, cb)
+ESX.RegisterServerCallback('esx_policejob:getPlayerInventory', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local items   = xPlayer.inventory
 
-  local xPlayer    = ESX.GetPlayerFromId(source)
-  local items      = xPlayer.getInventory()
-
-  cb({
-    items      = items
-  })
-
+	cb({items = items})
 end)
 
 ESX.RegisterServerCallback('esx_journalist:getFineList', function(source, cb, category)
@@ -178,3 +166,78 @@ ESX.RegisterServerCallback('esx_journalist:removeVaultWeapon', function(source, 
   end)
 
 end)
+
+ESX.RegisterServerCallback('esx_journalist:buyJobVehicle', function(source, cb, vehicleProps, type)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local price = getPriceFromHash(vehicleProps.model, xPlayer.job.grade_name, type)
+
+	-- vehicle model not found
+	if price == 0 then
+		print(('esx_journalist: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
+		cb(false)
+	else
+		if xPlayer.getMoney() >= price then
+			xPlayer.removeMoney(price)
+
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
+				['@owner'] = xPlayer.identifier,
+				['@vehicle'] = json.encode(vehicleProps),
+				['@plate'] = vehicleProps.plate,
+				['@type'] = type,
+				['@job'] = xPlayer.job.name,
+				['@stored'] = true
+			}, function (rowsChanged)
+				cb(true)
+			end)
+		else
+			cb(false)
+		end
+	end
+end)
+
+ESX.RegisterServerCallback('esx_journalist:storeNearbyVehicle', function(source, cb, nearbyVehicles)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local foundPlate, foundNum
+
+	for k,v in ipairs(nearbyVehicles) do
+		local result = MySQL.Sync.fetchAll('SELECT plate FROM owned_vehicles WHERE owner = @owner AND plate = @plate AND job = @job', {
+			['@owner'] = xPlayer.identifier,
+			['@plate'] = v.plate,
+			['@job'] = xPlayer.job.name
+		})
+
+		if result[1] then
+			foundPlate, foundNum = result[1].plate, k
+			break
+		end
+	end
+
+	if not foundPlate then
+		cb(false)
+	else
+		MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = true WHERE owner = @owner AND plate = @plate AND job = @job', {
+			['@owner'] = xPlayer.identifier,
+			['@plate'] = foundPlate,
+			['@job'] = xPlayer.job.name
+		}, function (rowsChanged)
+			if rowsChanged == 0 then
+				print(('esx_journalist: %s has exploited the garage!'):format(xPlayer.identifier))
+				cb(false)
+			else
+				cb(true, foundNum)
+			end
+		end)
+	end
+end)
+
+function getPriceFromHash(vehicleHash, jobGrade, type)
+	local vehicles = Config.AuthorizedVehicles[type][jobGrade]
+
+	for k,v in ipairs(vehicles) do
+		if GetHashKey(v.model) == vehicleHash then
+			return v.price
+		end
+	end
+
+	return 0
+end

@@ -22,6 +22,7 @@ local isInMarker              = false
 local isInPublicMarker        = false
 local hintIsShowed            = false
 local hintToDisplay           = "no hint to display"
+local LastPart, LastPartNum
 
 ESX                           = nil
 
@@ -282,8 +283,6 @@ function OpenGetStocksMenu()
 
   ESX.TriggerServerCallback('esx_journalist:getStockItems', function(items)
 
-    print(json.encode(items))
-
     local elements = {}
 
     for i=1, #items, 1 do
@@ -309,14 +308,15 @@ function OpenGetStocksMenu()
 
             local count = tonumber(data2.value)
 
-            if count == nil then
-              ESX.ShowNotification(_U('quantity_invalid'))
+            if not count then
+              ESX.ShowNotification(_U('invalid_quantity'))
             else
               menu2.close()
               menu.close()
-              OpenGetStocksMenu()
-
               TriggerServerEvent('esx_journalist:getStockItem', itemName, count)
+
+              Citizen.Wait(300)
+              OpenGetStocksMenu()
             end
 
           end,
@@ -370,14 +370,15 @@ function OpenPutStocksMenu()
 
             local count = tonumber(data2.value)
 
-            if count == nil then
-              ESX.ShowNotification(_U('quantity_invalid'))
+            if not count then
+              ESX.ShowNotification(_U('invalid_quantity'))
             else
               menu2.close()
               menu.close()
-              OpenPutStocksMenu()
-
               TriggerServerEvent('esx_journalist:putStockItems', itemName, count)
+
+              Citizen.Wait(300)
+              OpenPutStocksMenu()
             end
 
           end,
@@ -474,174 +475,37 @@ function OpenPutWeaponMenu()
 
 end
 
-function OpenVehicleSpawnerMenu()
-
-  local vehicles = Config.Zones.Vehicles
-
-  ESX.UI.Menu.CloseAll()
-
-  if Config.EnableSocietyOwnedVehicles then
-
-    local elements = {}
-
-    ESX.TriggerServerCallback('esx_society:getVehiclesInGarage', function(garageVehicles)
-
-      for i=1, #garageVehicles, 1 do
-        table.insert(elements, {label = GetDisplayNameFromVehicleModel(garageVehicles[i].model) .. ' [' .. garageVehicles[i].plate .. ']', value = garageVehicles[i]})
-      end
-
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'vehicle_spawner',
-        {
-          title    = _U('vehicle_menu'),
-          align    = 'top-left',
-          elements = elements,
-        },
-        function(data, menu)
-
-          menu.close()
-
-          local vehicleProps = data.current.value
-          ESX.Game.SpawnVehicle(vehicleProps.model, vehicles.SpawnPoint, vehicles.Heading, function(vehicle)
-              ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-              local playerPed = GetPlayerPed(-1)
-              --TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)  -- teleport into vehicle
-          end)            
-
-          TriggerServerEvent('esx_society:removeVehicleFromGarage', 'journalist', vehicleProps)
-
-        end,
-        function(data, menu)
-
-          menu.close()
-
-          CurrentAction     = 'menu_vehicle_spawner'
-          CurrentActionMsg  = _U('vehicle_spawner')
-          CurrentActionData = {}
-
-        end
-      )
-
-    end, 'journalist')
-
-  else
-
-    local elements = {}
-
-    for i=1, #Config.AuthorizedVehicles, 1 do
-      local vehicle = Config.AuthorizedVehicles[i]
-      table.insert(elements, {label = vehicle.label, value = vehicle.name})
-    end
-
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'vehicle_spawner',
-      {
-        title    = _U('vehicle_menu'),
-        align    = 'top-left',
-        elements = elements,
-      },
-      function(data, menu)
-
-        menu.close()
-
-        local model = data.current.value
-
-        local vehicle = GetClosestVehicle(vehicles.SpawnPoint.x,  vehicles.SpawnPoint.y,  vehicles.SpawnPoint.z,  3.0,  0,  71)
-
-        if not DoesEntityExist(vehicle) then
-
-          local playerPed = GetPlayerPed(-1)
-
-          if Config.MaxInService == -1 then
-
-            ESX.Game.SpawnVehicle(model, {
-              x = vehicles.SpawnPoint.x,
-              y = vehicles.SpawnPoint.y,
-              z = vehicles.SpawnPoint.z
-            }, vehicles.Heading, function(vehicle)
-              --TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1) -- teleport into vehicle
-              SetVehicleMaxMods(vehicle)
-              SetVehicleDirtLevel(vehicle, 0)
-            end)
-
-          else
-
-            ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
-
-              if canTakeService then
-
-                ESX.Game.SpawnVehicle(model, {
-                  --x = vehicles[partNum].SpawnPoint.x,
-                  --y = vehicles[partNum].SpawnPoint.y,
-                  --z = vehicles[partNum].SpawnPoint.z
-               -- }, vehicles[partNum].Heading, function(vehicle)
-                  --TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)  -- teleport into vehicle
-
-                  x = vehicles.SpawnPoint.x,
-                  y = vehicles.SpawnPoint.y,
-                  z = vehicles.SpawnPoint.z
-                }, vehicles.Heading, function(vehicle)
-                  SetVehicleMaxMods(vehicle)
-                  SetVehicleDirtLevel(vehicle, 0)
-                end)
-
-              else
-                ESX.ShowNotification(_U('service_max') .. inServiceCount .. '/' .. maxInService)
-              end
-
-            end, 'journalist')
-
-          end
-
-        else
-          ESX.ShowNotification(_U('vehicle_out'))
-        end
-
-      end,
-      function(data, menu)
-
-        menu.close()
-
-        CurrentAction     = 'menu_vehicle_spawner'
-        CurrentActionMsg  = _U('vehicle_spawner')
-        CurrentActionData = {}
-
-      end
-    )
-
-  end
-
-end
-
-AddEventHandler('esx_journalist:hasEnteredMarker', function(zone)
+AddEventHandler('esx_journalist:hasEnteredMarker', function(part, partNum)
  
-    if zone == 'BossActions' and IsGradeBoss() then
+    if part == 'BossActions' and IsGradeBoss() then
       CurrentAction     = 'menu_boss_actions'
       CurrentActionMsg  = _U('open_bossmenu')
       CurrentActionData = {}
-    end
 	
-    if zone == 'Cloakrooms' then
+    elseif part == 'Cloakrooms' then
       CurrentAction     = 'menu_cloakroom'
       CurrentActionMsg  = _U('open_cloackroom')
       CurrentActionData = {}
-    end	
 
-    if zone == 'Vehicles' then
+    elseif part == 'Vehicles' then
         CurrentAction     = 'menu_vehicle_spawner'
         CurrentActionMsg  = _U('vehicle_spawner')
-        CurrentActionData = {}
-    end	
+        CurrentActionData = { part = part, partNum = partNum }
+
+    elseif part == 'Helicopters' then
+        CurrentAction     = 'Helicopters'
+        CurrentActionMsg  = _U('helicopter_prompt')
+        CurrentActionData = { part = part, partNum = partNum }        
 	
     if Config.EnableVaultManagement then
-      if zone == 'Vaults' then
+      if part == 'Vaults' then
         CurrentAction     = 'menu_vault'
         CurrentActionMsg  = _U('open_vault')
         CurrentActionData = {}
       end
     end	
 
-    if zone == 'VehicleDeleters' then
+    if part == 'VehicleDeleters' then
 
       local playerPed = GetPlayerPed(-1)
 
@@ -667,22 +531,112 @@ end)
 
 -- Display markers
 Citizen.CreateThread(function()
-    while true do
+	while true do
+		Citizen.Wait(0)
 
-        Wait(0)
-        if IsJobTrue() then
+		if ESX.PlayerData.job and ESX.PlayerData.job.name == 'journalist' then
+			local playerPed = PlayerPedId()
+			local playerCoords = GetEntityCoords(playerPed)
+			local isInMarker, hasExited, letSleep = false, false, true
+			local currentPart, currentPartNum
 
-            local coords = GetEntityCoords(GetPlayerPed(-1))
+			for k,v in pairs(Config.Zones) do
+				for i=1, #v.Cloakrooms, 1 do
+					local distance = #(playerCoords - v.Cloakrooms[i])
 
-            for k,v in pairs(Config.Zones) do
-                if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config.DrawDistance) then
-                    DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z+1.5, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, false, 2, false, false, false, false)
-                end
-            end
+					if distance < Config.DrawDistance then
+						DrawMarker(20, v.Cloakrooms[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
 
-        end
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentPart, currentPartNum = true, k, 'Cloakroom', i
+						end
+					end
+				end
 
-    end
+				for i=1, #v.Vaults, 1 do
+					local distance = #(playerCoords - v.Vaults[i])
+
+					if distance < Config.DrawDistance then
+						DrawMarker(21, v.Vaults[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
+
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentPart, currentPartNum = true, k, 'Vaults', i
+						end
+					end
+				end
+
+				for i=1, #v.Vehicles, 1 do
+					local distance = #(playerCoords - v.Vehicles[i].Spawner)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(36, v.Vehicles[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
+
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentPart, currentPartNum = true, k, 'Vehicles', i
+						end
+					end
+				end
+
+				for i=1, #v.Helicopters, 1 do
+					local distance =  #(playerCoords - v.Helicopters[i].Spawner)
+
+					if distance < Config.DrawDistance then
+						DrawMarker(34, v.Helicopters[i].Spawner, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
+
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentPart, currentPartNum = true, k, 'Helicopters', i
+						end
+					end
+				end
+
+				if Config.EnablePlayerManagement and ESX.PlayerData.job.grade_name == 'boss' then
+					for i=1, #v.BossActions, 1 do
+						local distance = #(playerCoords - v.BossActions[i])
+
+						if distance < Config.DrawDistance then
+							DrawMarker(22, v.BossActions[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+							letSleep = false
+
+							if distance < Config.MarkerSize.x then
+								isInMarker, currentPart, currentPartNum = true, k, 'BossActions', i
+							end
+						end
+					end
+				end
+			end
+
+			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
+				if
+					(LastPart and LastPartNum) and
+					(LastPart ~= currentPart or LastPartNum ~= currentPartNum)
+				then
+					TriggerEvent('esx_journalist:hasExitedMarker', LastPart, LastPartNum)
+					hasExited = true
+				end
+
+				HasAlreadyEnteredMarker = true
+				LastPart                = currentPart
+				LastPartNum             = currentPartNum
+
+				TriggerEvent('esx_journalist:hasEnteredMarker', currentPart, currentPartNum)
+			end
+
+			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
+				HasAlreadyEnteredMarker = false
+				TriggerEvent('esx_journalist:hasExitedMarker', LastPart, LastPartNum)
+			end
+
+			if letSleep then
+				Citizen.Wait(500)
+			end
+		else
+			Citizen.Wait(500)
+		end
+	end
 end)
 
 -- Enter / Exit marker events
@@ -742,7 +696,13 @@ Citizen.CreateThread(function()
         end
 		
         if CurrentAction == 'menu_vehicle_spawner' then
-            OpenVehicleSpawnerMenu()
+            --OpenVehicleSpawnerMenu()
+            OpenVehicleSpawnerMenu('car', CurrentActionData.part, CurrentActionData.partNum)
+        end
+
+        if CurrentAction == 'Helicopters' then
+          --OpenVehicleSpawnerMenu()
+          OpenVehicleSpawnerMenu('helicopter', CurrentActionData.part, CurrentActionData.partNum)
         end
 
         if CurrentAction == 'delete_vehicle' then
