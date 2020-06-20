@@ -22,7 +22,7 @@ local isInMarker              = false
 local isInPublicMarker        = false
 local hintIsShowed            = false
 local hintToDisplay           = "no hint to display"
-local LastPart, LastPartNum
+local LastStation, LastPart, LastPartNum
 
 ESX                           = nil
 
@@ -475,7 +475,7 @@ function OpenPutWeaponMenu()
 
 end
 
-AddEventHandler('esx_journalist:hasEnteredMarker', function(part, partNum)
+AddEventHandler('esx_journalist:hasEnteredMarker', function(station, part, partNum)
  
     if part == 'BossActions' and IsGradeBoss() then
       CurrentAction     = 'menu_boss_actions'
@@ -496,12 +496,13 @@ AddEventHandler('esx_journalist:hasEnteredMarker', function(part, partNum)
         CurrentAction     = 'Helicopters'
         CurrentActionMsg  = _U('helicopter_prompt')
         CurrentActionData = { part = part, partNum = partNum }        
-	
+    end
+
     if Config.EnableVaultManagement then
       if part == 'Vaults' then
         CurrentAction     = 'menu_vault'
         CurrentActionMsg  = _U('open_vault')
-        CurrentActionData = {}
+        CurrentActionData = { station = station }
       end
     end	
 
@@ -522,7 +523,7 @@ AddEventHandler('esx_journalist:hasEnteredMarker', function(part, partNum)
 	
 end)
 
-AddEventHandler('esx_journalist:hasExitedMarker', function(zone)
+AddEventHandler('esx_journalist:hasExitedMarker', function(station, part, partNum)
 
     CurrentAction = nil
     ESX.UI.Menu.CloseAll()
@@ -538,9 +539,9 @@ Citizen.CreateThread(function()
 			local playerPed = PlayerPedId()
 			local playerCoords = GetEntityCoords(playerPed)
 			local isInMarker, hasExited, letSleep = false, false, true
-			local currentPart, currentPartNum
+			local currentStation, currentPart, currentPartNum
 
-			for k,v in pairs(Config.Zones) do
+			for k,v in pairs(Config.Stations) do
 				for i=1, #v.Cloakrooms, 1 do
 					local distance = #(playerCoords - v.Cloakrooms[i])
 
@@ -549,7 +550,7 @@ Citizen.CreateThread(function()
 						letSleep = false
 
 						if distance < Config.MarkerSize.x then
-							isInMarker, currentPart, currentPartNum = true, k, 'Cloakroom', i
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Cloakroom', i
 						end
 					end
 				end
@@ -562,7 +563,7 @@ Citizen.CreateThread(function()
 						letSleep = false
 
 						if distance < Config.MarkerSize.x then
-							isInMarker, currentPart, currentPartNum = true, k, 'Vaults', i
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Vaults', i
 						end
 					end
 				end
@@ -575,7 +576,7 @@ Citizen.CreateThread(function()
 						letSleep = false
 
 						if distance < Config.MarkerSize.x then
-							isInMarker, currentPart, currentPartNum = true, k, 'Vehicles', i
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Vehicles', i
 						end
 					end
 				end
@@ -588,10 +589,23 @@ Citizen.CreateThread(function()
 						letSleep = false
 
 						if distance < Config.MarkerSize.x then
-							isInMarker, currentPart, currentPartNum = true, k, 'Helicopters', i
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'Helicopters', i
 						end
 					end
-				end
+        end
+        
+				for i=1, #v.VehicleDeleters, 1 do
+					local distance = #(playerCoords - v.VehicleDeleters[i])
+
+					if distance < Config.DrawDistance then
+						DrawMarker(21, v.VehicleDeleters[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+						letSleep = false
+
+						if distance < Config.MarkerSize.x then
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'VehicleDeleters', i
+						end
+					end
+				end        
 
 				if Config.EnablePlayerManagement and ESX.PlayerData.job.grade_name == 'boss' then
 					for i=1, #v.BossActions, 1 do
@@ -602,32 +616,33 @@ Citizen.CreateThread(function()
 							letSleep = false
 
 							if distance < Config.MarkerSize.x then
-								isInMarker, currentPart, currentPartNum = true, k, 'BossActions', i
+								isInMarker, currentStation, currentPart, currentPartNum = true, k, 'BossActions', i
 							end
 						end
 					end
 				end
 			end
 
-			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
+			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
 				if
-					(LastPart and LastPartNum) and
-					(LastPart ~= currentPart or LastPartNum ~= currentPartNum)
+					(LastStation and LastPart and LastPartNum) and
+					(LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)
 				then
-					TriggerEvent('esx_journalist:hasExitedMarker', LastPart, LastPartNum)
+					TriggerEvent('esx_journalist:hasExitedMarker', LastStation, LastPart, LastPartNum)
 					hasExited = true
 				end
 
 				HasAlreadyEnteredMarker = true
+				LastStation             = currentStation
 				LastPart                = currentPart
 				LastPartNum             = currentPartNum
 
-				TriggerEvent('esx_journalist:hasEnteredMarker', currentPart, currentPartNum)
+				TriggerEvent('esx_journalist:hasEnteredMarker', currentStation, currentPart, currentPartNum)
 			end
 
 			if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
 				HasAlreadyEnteredMarker = false
-				TriggerEvent('esx_journalist:hasExitedMarker', LastPart, LastPartNum)
+				TriggerEvent('esx_journalist:hasExitedMarker', LastStation, LastPart, LastPartNum)
 			end
 
 			if letSleep then
@@ -637,40 +652,6 @@ Citizen.CreateThread(function()
 			Citizen.Wait(500)
 		end
 	end
-end)
-
--- Enter / Exit marker events
-Citizen.CreateThread(function()
-    while true do
-
-        Wait(0)
-        if IsJobTrue() then
-
-            local coords      = GetEntityCoords(GetPlayerPed(-1))
-            local isInMarker  = false
-            local currentZone = nil
-
-            for k,v in pairs(Config.Zones) do
-                if(GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < v.Size.x) then
-                    isInMarker  = true
-                    currentZone = k
-                end
-            end
-
-            if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
-                HasAlreadyEnteredMarker = true
-                LastZone                = currentZone
-                TriggerEvent('esx_journalist:hasEnteredMarker', currentZone)
-            end
-
-            if not isInMarker and HasAlreadyEnteredMarker then
-                HasAlreadyEnteredMarker = false
-                TriggerEvent('esx_journalist:hasExitedMarker', LastZone)
-            end
-
-        end
-
-    end
 end)
 
 -- Key Controls
@@ -697,12 +678,12 @@ Citizen.CreateThread(function()
 		
         if CurrentAction == 'menu_vehicle_spawner' then
             --OpenVehicleSpawnerMenu()
-            OpenVehicleSpawnerMenu('car', CurrentActionData.part, CurrentActionData.partNum)
+            OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
         end
 
         if CurrentAction == 'Helicopters' then
           --OpenVehicleSpawnerMenu()
-          OpenVehicleSpawnerMenu('helicopter', CurrentActionData.part, CurrentActionData.partNum)
+          OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
         end
 
         if CurrentAction == 'delete_vehicle' then

@@ -24,55 +24,47 @@ Config.Blip = {
 	Colour  = 0,
 }
 
-Config.Zones = {
+Config.Stations = {
 
-    BossActions = {
-        Pos   = { x = -582.7, y = -928.3, z = 28.2 },
-        Size  = { x = 1.5, y = 1.5, z = 1.0 },
-        Color = { r = 0, g = 100, b = 0 },
-        Type  = 22,
-    },
-	
-	Cloakrooms = {
-		Pos = { x = -584.6, y = -939.1, z = 22.9},
-		Size = { x = 1.5, y = 1.5, z = 1.0 },
-        Color = { r = 0, g = 255, b = 128 },
-		Type = 20,
-	},
+	Main = {
 
-	Vehicles = {
-		{
-			Spawner = vector3(-543.7, -886.8, 24.2),
-			InsideShop = vector3(-543.7, -900.8, 24.2),
-			SpawnPoints = {
-				{coords = vector3(-547.9, -900.2, 23.0), heading = 170.71, radius = 6.0},
-			}
+		BossActions = {
+			vector3(-582.7, -928.3, 28.2)
 		},
-	},
 		
-	Helicopters = {
-		{
-			Spawner = vector3(461.1, -981.5, 43.6),
-			InsideShop = vector3(477.0, -1106.4, 43.0),
-			SpawnPoints = {
-				{coords = vector3(449.5, -981.2, 43.6), heading = 92.6, radius = 10.0}
+		Cloakrooms = {
+			vector3(-584.6, -939.1, 22.9)
+		},
+		Vaults = {
+			vector3(-579.4, -925.2, 22.9)
+		}
+		VehicleDeleters = {
+			vector3(-532.6, -888.7, 24.0)
+		}				
+	
+		Vehicles = {
+			{
+				Spawner = vector3(-543.7, -886.8, 24.2),
+				InsideShop = vector3(-543.7, -900.8, 24.2),
+				SpawnPoints = {
+					{coords = vector3(-547.9, -900.2, 23.0), heading = 170.71, radius = 6.0},
+				}
+			},
+		},
+	
+		Helicopters = {
+			{
+				Spawner = vector3(461.1, -981.5, 43.6),
+				InsideShop = vector3(477.0, -1106.4, 43.0),
+				SpawnPoints = {
+					{coords = vector3(449.5, -981.2, 43.6), heading = 92.6, radius = 10.0}
+				}
 			}
 		}
-	},
 
-	VehicleDeleters = {
-		Pos  = { x = -532.6, y = -888.7, z = 24.0},
-		Size = { x = 4.0, y = 4.0, z = 2.0 },
-        Color = { r = 0, g = 255, b = 128 },		
-		Type = 20,
-	},	
+	}
 
-    Vaults = {
-        Pos   = { x = -579.4, y = -925.2, z = 22.9 },
-        Size  = { x = 1.3, y = 1.3, z = 1.0 },
-        Color        = { r = 0, g = 255, b = 128 },
-        Type  = 20,
-    },	
+	
 }
 
 Config.Uniforms = {

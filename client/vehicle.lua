@@ -1,7 +1,7 @@
 
 local spawnedVehicles = {}
 
-function OpenVehicleSpawnerMenu(type, part, partNum)
+function OpenVehicleSpawnerMenu(type, station, part, partNum)
 	local playerCoords = GetEntityCoords(PlayerPedId())
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle', {
@@ -14,7 +14,7 @@ function OpenVehicleSpawnerMenu(type, part, partNum)
 	}}, function(data, menu)
 		if data.current.action == 'buy_vehicle' then
 			local shopElements = {}
-			local shopCoords = Config.Zones[part][partNum].InsideShop
+			local shopCoords = Config.Stations[station][part][partNum].InsideShop
 			local authorizedVehicles = Config.AuthorizedVehicles[type][ESX.PlayerData.job.grade_name]
 
 			if authorizedVehicles then
@@ -83,7 +83,7 @@ function OpenVehicleSpawnerMenu(type, part, partNum)
 							elements = garage
 						}, function(data2, menu2)
 							if data2.current.stored then
-								local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(part, partNum)
+								local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(station, part, partNum)
 
 								if foundSpawn then
 									menu2.close()
@@ -184,8 +184,8 @@ function StoreNearbyVehicle(playerCoords)
 	end, vehiclePlates)
 end
 
-function GetAvailableVehicleSpawnPoint(part, partNum)
-	local spawnPoints = Config.Zones[part][partNum].SpawnPoints
+function GetAvailableVehicleSpawnPoint(station, part, partNum)
+	local spawnPoints = Config.Station[station][part][partNum].SpawnPoints
 	local found, foundSpawnPoint = false, nil
 
 	for i=1, #spawnPoints, 1 do
