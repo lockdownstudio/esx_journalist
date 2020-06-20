@@ -660,33 +660,22 @@ Citizen.CreateThread(function()
 
     Citizen.Wait(0)
 
-    if CurrentAction ~= nil then
+    if CurrentAction then
+      ESX.ShowHelpNotification(CurrentActionMsg)
 
-      SetTextComponentFormat('STRING')
-      AddTextComponentString(CurrentActionMsg)
-      DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-
-      if IsControlJustReleased(0,  Keys['E']) and IsJobTrue() then
+      if IsControlJustReleased(0,  Keys['E']) and and ESX.PlayerData.job and ESX.PlayerData.job.name == 'journalist' then
 
         if CurrentAction == 'menu_cloakroom' then
             OpenCloakroomMenu()
-        end
-
-        if CurrentAction == 'menu_vault' then
+        elseif CurrentAction == 'menu_vault' then
             OpenVaultMenu()
-        end
-		
-        if CurrentAction == 'menu_vehicle_spawner' then
+        elseif CurrentAction == 'menu_vehicle_spawner' then
             --OpenVehicleSpawnerMenu()
             OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
-        end
-
-        if CurrentAction == 'Helicopters' then
+        elseif CurrentAction == 'Helicopters' then
           --OpenVehicleSpawnerMenu()
           OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
-        end
-
-        if CurrentAction == 'delete_vehicle' then
+        elseif CurrentAction == 'delete_vehicle' then
 
           if Config.EnableSocietyOwnedVehicles then
 
@@ -704,15 +693,13 @@ Citizen.CreateThread(function()
           end
 
           ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-        end
-		
-        if CurrentAction == 'menu_boss_actions' and IsGradeBoss() then
+        elseif CurrentAction == 'menu_boss_actions' and IsGradeBoss() then
 
           local options = {
             wash      = Config.EnableMoneyWash,
           }
 
-          -- ESX.UI.Menu.CloseAll()
+          ESX.UI.Menu.CloseAll()
 
           TriggerEvent('esx_society:openBossMenu', 'journalist', function(data, menu)
 
