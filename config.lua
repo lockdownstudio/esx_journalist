@@ -12,9 +12,43 @@ Config.MaxInService               = 10
 Config.Locale                     = 'en'
 
 Config.AuthorizedVehicles = {
-    { name = 'rumpo',  label = 'LD News Van' },
-	{ name = 'frogger2',  label = 'LD News Helicopter' },
+	car = {
+		crew = {},
+
+		cameraman = {
+			{model = 'rumpo', price = 20000}
+		},
+
+		reporter = {
+			{model = 'rumpo', price = 20000}
+		},
+
+		investigator = {
+			{model = 'rumpo', price = 20000}
+		},
+
+		boss = {
+			{model = 'rumpo', price = 20000}
+		}
+	},
+
+	helicopter = {
+		crew = {},
+
+		cameraman = {},
+
+		reporter = {},
+
+		investigator = {
+			{model = 'frogger2', props = {modLivery = 0}, price = 200000}
+		},
+
+		boss = {
+			{model = 'frogger2', props = {modLivery = 0}, price = 100000}
+		}
+	}
 }
+
 
 Config.Blip = {
 	Pos     = { x = -598.7, y = -929.9, z = 23.0},
