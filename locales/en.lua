@@ -2,10 +2,11 @@ Locales['en'] = {
 	-- Cloakroom
 	['cloakroom'] = 'Cloakroom',
 	['citizen_wear'] = 'Civilian attire',
-	['journalist_outfit'] = 'Trainee outfit',
-	['journalist_outfit_1'] = 'Reporter attire',
-	['journalist_outfit_2'] = 'Investigator uniform',
-	['journalist_outfit_3'] = 'Director outfit', 
+	['journalist_outfit'] = 'Crew outfit',
+	['journalist_outfit_1'] = 'Camera Man attire',
+	['journalist_outfit_2'] = 'Reporter uniform',
+	['journalist_outfit_3'] = 'Anchor outfit',
+	['journalist_outfit_4'] = 'Director outfit',  
     	['no_outfit'] = 'There is no uniform for your size ...',
     	['open_cloackroom'] = 'Press ~INPUT_CONTEXT~ to change yourself',
 	

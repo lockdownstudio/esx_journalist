@@ -114,6 +114,7 @@ function OpenCloakroomMenu()
     { label = _U('journalist_outfit_1'),  value = 'journalist_outfit_1'},
     { label = _U('journalist_outfit_2'),  value = 'journalist_outfit_2'},
     { label = _U('journalist_outfit_3'),  value = 'journalist_outfit_3'},
+    { label = _U('journalist_outfit_4'),  value = 'journalist_outfit_4'},
   }
 	
 	ESX.UI.Menu.CloseAll()
@@ -124,7 +125,7 @@ function OpenCloakroomMenu()
       title    = _U('cloakroom'),
       align    = 'top-left',
       elements = elements,
-    },
+    },  
     function(data, menu)
 
       cleanPlayer(playerPed)
@@ -139,7 +140,8 @@ function OpenCloakroomMenu()
         data.current.value == 'journalist_outfit' or
         data.current.value == 'journalist_outfit_1' and ESX.PlayerData.job.grade_name == 'reporter' or ESX.PlayerData.job.grade_name == 'investigator' or IsGradeBoss() or
         data.current.value == 'journalist_outfit_2' and ESX.PlayerData.job.grade_name == 'investigator' or IsGradeBoss() or
-        data.current.value == 'journalist_outfit_3' and IsGradeBoss()
+        data.current.value == 'journalist_outfit_3' and ESX.PlayerData.job.grade_name == 'investigator' or IsGradeBoss() or
+        data.current.value == 'journalist_outfit_4' and IsGradeBoss()
       then
         setUniform(data.current.value, playerPed)
       end
