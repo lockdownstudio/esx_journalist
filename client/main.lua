@@ -490,12 +490,12 @@ AddEventHandler('esx_journalist:hasEnteredMarker', function(station, part, partN
     elseif part == 'Vehicles' then
         CurrentAction     = 'menu_vehicle_spawner'
         CurrentActionMsg  = _U('vehicle_spawner')
-        CurrentActionData = { part = part, partNum = partNum }
+        CurrentActionData = { station = station, part = part, partNum = partNum }
 
     elseif part == 'Helicopters' then
         CurrentAction     = 'Helicopters'
         CurrentActionMsg  = _U('helicopter_prompt')
-        CurrentActionData = { part = part, partNum = partNum }        
+        CurrentActionData = { station = station, part = part, partNum = partNum }        
     end
 
     if Config.EnableVaultManagement then
@@ -663,7 +663,7 @@ Citizen.CreateThread(function()
     if CurrentAction then
       ESX.ShowHelpNotification(CurrentActionMsg)
 
-      if IsControlJustReleased(0,  Keys['E']) and and ESX.PlayerData.job and ESX.PlayerData.job.name == 'journalist' then
+      if IsControlJustReleased(0,  Keys['E']) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'journalist' then
 
         if CurrentAction == 'menu_cloakroom' then
             OpenCloakroomMenu()

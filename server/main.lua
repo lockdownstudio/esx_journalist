@@ -54,7 +54,7 @@ AddEventHandler('esx_journalist:putStockItems', function(itemName, count)
 end)
 
 
-ESX.RegisterServerCallback('esx_policejob:getPlayerInventory', function(source, cb)
+ESX.RegisterServerCallback('esx_journalist:getPlayerInventory', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local items   = xPlayer.inventory
 
