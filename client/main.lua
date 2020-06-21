@@ -10,7 +10,6 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-local PlayerData              = {}
 local HasAlreadyEnteredMarker = false
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
@@ -27,6 +26,12 @@ Citizen.CreateThread(function()
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
     Citizen.Wait(0)
   end
+
+  while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(10)
+	end
+
+	ESX.PlayerData = ESX.GetPlayerData()
 end)
 
 -- Create blips
@@ -47,20 +52,6 @@ Citizen.CreateThread(function()
 
 
 end)
-
-function SetVehicleMaxMods(vehicle)
-
-  local props = {
-    modEngine       = 0,
-    modBrakes       = 0,
-    modTransmission = 0,
-    modSuspension   = 0,
-    modTurbo        = false,
-  }
-
-  ESX.Game.SetVehicleProperties(vehicle, props)
-
-end
 
 function IsGradeBoss()
     if ESX.PlayerData ~= nil then
@@ -113,16 +104,6 @@ function setUniform(job, playerPed)
   end)
 end
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-  PlayerData = xPlayer
-end)
-
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-  PlayerData.job = job
-end)
-
 function OpenCloakroomMenu()
 
   local playerPed = GetPlayerPed(-1)
@@ -146,7 +127,6 @@ function OpenCloakroomMenu()
     },
     function(data, menu)
 
-      isBarman = false
       cleanPlayer(playerPed)
 
       if data.current.value == 'citizen_wear' then
