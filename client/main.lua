@@ -23,6 +23,7 @@ local isInPublicMarker        = false
 local hintIsShowed            = false
 local hintToDisplay           = "no hint to display"
 local LastStation, LastPart, LastPartNum
+local isInShopMenu            = false
 
 ESX                           = nil
 
@@ -66,20 +67,10 @@ function SetVehicleMaxMods(vehicle)
 
 end
 
-function IsJobTrue()
-    if PlayerData ~= nil then
-        local IsJobTrue = false
-        if PlayerData.job ~= nil and PlayerData.job.name == 'journalist' then
-            IsJobTrue = true
-        end
-        return IsJobTrue
-    end
-end
-
 function IsGradeBoss()
-    if PlayerData ~= nil then
+    if ESX.PlayerData ~= nil then
         local IsGradeBoss = false
-        if PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'viceboss' then
+        if ESX.PlayerData.job.grade_name == 'boss' or ESX.PlayerData.job.grade_name == 'viceboss' then
             IsGradeBoss = true
         end
         return IsGradeBoss
@@ -464,7 +455,7 @@ function OpenPutWeaponMenu()
 
       ESX.TriggerServerCallback('esx_journalist:addVaultWeapon', function()
         OpenPutWeaponMenu()
-      end, data.current.value)
+      end, data.current.value, true)
 
     end,
     function(data, menu)
@@ -476,7 +467,7 @@ end
 
 AddEventHandler('esx_journalist:hasEnteredMarker', function(station, part, partNum)
  
-    if part == 'BossActions' and IsGradeBoss() then
+    if part == 'BossActions' then
       CurrentAction     = 'menu_boss_actions'
       CurrentActionMsg  = _U('open_bossmenu')
       CurrentActionData = {}
@@ -524,9 +515,12 @@ end)
 
 AddEventHandler('esx_journalist:hasExitedMarker', function(station, part, partNum)
 
-    CurrentAction = nil
-    ESX.UI.Menu.CloseAll()
+  if not isInShopMenu then
+		ESX.UI.Menu.CloseAll()
+	end
 
+  CurrentAction = nil
+  
 end)
 
 -- Display markers
@@ -692,7 +686,7 @@ Citizen.CreateThread(function()
           end
 
           ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-        elseif CurrentAction == 'menu_boss_actions' and IsGradeBoss() then
+        elseif CurrentAction == 'menu_boss_actions' then
 
           local options = {
             wash      = Config.EnableMoneyWash,
@@ -718,7 +712,7 @@ Citizen.CreateThread(function()
 
     end
 
-    if IsControlJustReleased(0,  Keys['F6']) and IsJobTrue()then
+    if IsControlJustReleased(0,  Keys['F6']) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'journalist' then
         OpenBillingMenu()
     end
 

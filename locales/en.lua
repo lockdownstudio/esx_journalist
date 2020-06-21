@@ -49,7 +49,8 @@ Locales['en'] = {
     	['you_added'] = 'You added x',
     	['quantity'] = 'Quantity',
     	['inventory'] = 'Inventory',
-    	['unicorn_stock'] = 'Stock',
+		['unicorn_stock'] = 'Stock',
+		['have_withdrawn'] = 'you have withdrawn ~y~%sx~s~ ~b~%s~s~',
 
     	-- Misc 
     	['map_blip'] = 'Lockdown News',

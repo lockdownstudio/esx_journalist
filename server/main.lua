@@ -26,10 +26,10 @@ AddEventHandler('esx_journalist:getStockItem', function(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
 				xPlayer.showNotification(_U('have_withdrawn', count, inventoryItem.label))
 			else
-				xPlayer.showNotification(_U('quantity_invalid'))
+				xPlayer.showNotification(_U('invalid_quantity'))
 			end
 		else
-			xPlayer.showNotification(_U('quantity_invalid'))
+			xPlayer.showNotification(_U('invalid_quantity'))
 		end
 	end)
 end)
@@ -48,7 +48,7 @@ AddEventHandler('esx_journalist:putStockItems', function(itemName, count)
 			inventory.addItem(itemName, count)
 			xPlayer.showNotification(_U('have_deposited', count, inventoryItem.label))
 		else
-			xPlayer.showNotification(_U('quantity_invalid'))
+			xPlayer.showNotification(_U('invalid_quantity'))
 		end
 	end)
 end)
