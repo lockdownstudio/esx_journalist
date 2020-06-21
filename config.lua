@@ -15,15 +15,15 @@ Config.AuthorizedVehicles = {
 	car = {
 		crew = {},
 
-		cameraman = {
+		cam_man = {
 			{model = 'rumpo', price = 20000}
 		},
 
-		reporter = {
+		report = {
 			{model = 'rumpo', price = 20000}
 		},
 
-		investigator = {
+		anchor = {
 			{model = 'rumpo', price = 20000}
 		},
 
@@ -35,11 +35,11 @@ Config.AuthorizedVehicles = {
 	helicopter = {
 		crew = {},
 
-		cameraman = {},
+		cam_man = {},
 
-		reporter = {},
+		report = {},
 
-		investigator = {
+		anchor = {
 			{model = 'frogger2', props = {modLivery = 0}, price = 200000}
 		},
 
