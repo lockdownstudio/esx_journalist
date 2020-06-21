@@ -53,6 +53,11 @@ AddEventHandler('esx_journalist:putStockItems', function(itemName, count)
 	end)
 end)
 
+ESX.RegisterServerCallback('esx_journalist:getStockItems', function(source, cb)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_weazel', function(inventory)
+		cb(inventory.items)
+	end)
+end)
 
 ESX.RegisterServerCallback('esx_journalist:getPlayerInventory', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -91,42 +96,35 @@ ESX.RegisterServerCallback('esx_journalist:getVaultWeapons', function(source, cb
 
 end)
 
-ESX.RegisterServerCallback('esx_journalist:addVaultWeapon', function(source, cb, weaponName)
+ESX.RegisterServerCallback('esx_journalist:addVaultWeapon', function(source, cb, weaponName, removeWeapon)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
-  local xPlayer = ESX.GetPlayerFromId(source)
+	if removeWeapon then
+		xPlayer.removeWeapon(weaponName)
+	end
 
-  xPlayer.removeWeapon(weaponName)
+	TriggerEvent('esx_datastore:getSharedDataStore', 'society_weazel', function(store)
+		local weapons = store.get('weapons') or {}
+		local foundWeapon = false
 
-  TriggerEvent('esx_datastore:getSharedDataStore', 'society_weazel', function(store)
+		for i=1, #weapons, 1 do
+			if weapons[i].name == weaponName then
+				weapons[i].count = weapons[i].count + 1
+				foundWeapon = true
+				break
+			end
+		end
 
-    local weapons = store.get('weapons')
+		if not foundWeapon then
+			table.insert(weapons, {
+				name  = weaponName,
+				count = 1
+			})
+		end
 
-    if weapons == nil then
-      weapons = {}
-    end
-
-    local foundWeapon = false
-
-    for i=1, #weapons, 1 do
-      if weapons[i].name == weaponName then
-        weapons[i].count = weapons[i].count + 1
-        foundWeapon = true
-      end
-    end
-
-    if not foundWeapon then
-      table.insert(weapons, {
-        name  = weaponName,
-        count = 1
-      })
-    end
-
-     store.set('weapons', weapons)
-
-     cb()
-
-  end)
-
+		store.set('weapons', weapons)
+		cb()
+	end)
 end)
 
 ESX.RegisterServerCallback('esx_journalist:removeVaultWeapon', function(source, cb, weaponName)
@@ -137,18 +135,15 @@ ESX.RegisterServerCallback('esx_journalist:removeVaultWeapon', function(source, 
 
   TriggerEvent('esx_datastore:getSharedDataStore', 'society_weazel', function(store)
 
-    local weapons = store.get('weapons')
-
-    if weapons == nil then
-      weapons = {}
-    end
+    local weapons = store.get('weapons') or {}
 
     local foundWeapon = false
 
     for i=1, #weapons, 1 do
       if weapons[i].name == weaponName then
         weapons[i].count = (weapons[i].count > 0 and weapons[i].count - 1 or 0)
-        foundWeapon = true
+		foundWeapon = true
+		break
       end
     end
 

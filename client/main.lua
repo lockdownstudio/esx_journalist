@@ -438,7 +438,7 @@ end
 function OpenPutWeaponMenu()
 
   local elements   = {}
-  local playerPed  = GetPlayerPed(-1)
+  local playerPed  = PlayerPedId()
   local weaponList = ESX.GetWeaponList()
 
   for i=1, #weaponList, 1 do
@@ -446,7 +446,6 @@ function OpenPutWeaponMenu()
     local weaponHash = GetHashKey(weaponList[i].name)
 
     if HasPedGotWeapon(playerPed,  weaponHash,  false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
-      local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
       table.insert(elements, {label = weaponList[i].label, value = weaponList[i].name})
     end
 
