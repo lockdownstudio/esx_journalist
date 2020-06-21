@@ -141,7 +141,7 @@ Config.Uniforms = {
 			['arms'] = 3,
 			['pants_1'] = 11,   ['pants_2'] = 6,
 			['shoes_1'] = 24,   ['shoes_2'] = 0,
-			['chain_1'] = 0,  ['chain_2'] = 0
+			['chain_1'] = 0,  ['chain_2'] = 0,
             ['helmet_1'] =19,  ['helmet_2'] = 0
 		}	
 	},
