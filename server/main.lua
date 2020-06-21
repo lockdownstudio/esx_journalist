@@ -175,7 +175,7 @@ ESX.RegisterServerCallback('esx_journalist:buyJobVehicle', function(source, cb, 
 			xPlayer.removeMoney(price)
 
 			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
-				['@owner'] = xPlayer.identifier,
+				['@owner'] = 'society:' .. xPlayer.job.name,
 				['@vehicle'] = json.encode(vehicleProps),
 				['@plate'] = vehicleProps.plate,
 				['@type'] = type,
@@ -196,7 +196,7 @@ ESX.RegisterServerCallback('esx_journalist:storeNearbyVehicle', function(source,
 
 	for k,v in ipairs(nearbyVehicles) do
 		local result = MySQL.Sync.fetchAll('SELECT plate FROM owned_vehicles WHERE owner = @owner AND plate = @plate AND job = @job', {
-			['@owner'] = xPlayer.identifier,
+			['@owner'] = 'society:' .. xPlayer.job.name,
 			['@plate'] = v.plate,
 			['@job'] = xPlayer.job.name
 		})
@@ -211,7 +211,7 @@ ESX.RegisterServerCallback('esx_journalist:storeNearbyVehicle', function(source,
 		cb(false)
 	else
 		MySQL.Async.execute('UPDATE owned_vehicles SET `stored` = true WHERE owner = @owner AND plate = @plate AND job = @job', {
-			['@owner'] = xPlayer.identifier,
+			['@owner'] = 'society:' .. xPlayer.job.name,
 			['@plate'] = foundPlate,
 			['@job'] = xPlayer.job.name
 		}, function (rowsChanged)
