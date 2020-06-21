@@ -5,7 +5,7 @@ Config.MarkerSize                 = {x = 1.5, y = 1.5, z = 0.5}
 Config.MarkerColor                = { r = 102, g = 0, b = 102 }
 Config.EnablePlayerManagement     = true
 Config.EnableVaultManagement      = true
-Config.EnableSocietyOwnedVehicles = false
+Config.EnableSocietyOwnedVehicles = true
 Config.EnableHelicopters          = true
 Config.EnableMoneyWash            = false
 Config.MaxInService               = 10

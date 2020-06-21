@@ -12,16 +12,11 @@ local Keys = {
 
 local PlayerData              = {}
 local HasAlreadyEnteredMarker = false
-local LastZone                = nil
 local CurrentAction           = nil
 local CurrentActionMsg        = ''
 local CurrentActionData       = {}
 local Blips                   = {}
 
-local isInMarker              = false
-local isInPublicMarker        = false
-local hintIsShowed            = false
-local hintToDisplay           = "no hint to display"
 local LastStation, LastPart, LastPartNum
 local isInShopMenu            = false
 
@@ -162,8 +157,8 @@ function OpenCloakroomMenu()
 
       if
         data.current.value == 'journalist_outfit' or
-        data.current.value == 'journalist_outfit_1' and PlayerData.job.grade_name == 'reporter' or PlayerData.job.grade_name == 'investigator' or IsGradeBoss() or
-        data.current.value == 'journalist_outfit_2' and PlayerData.job.grade_name == 'investigator' or IsGradeBoss() or
+        data.current.value == 'journalist_outfit_1' and ESX.PlayerData.job.grade_name == 'reporter' or ESX.PlayerData.job.grade_name == 'investigator' or IsGradeBoss() or
+        data.current.value == 'journalist_outfit_2' and ESX.PlayerData.job.grade_name == 'investigator' or IsGradeBoss() or
         data.current.value == 'journalist_outfit_3' and IsGradeBoss()
       then
         setUniform(data.current.value, playerPed)
@@ -472,7 +467,7 @@ AddEventHandler('esx_journalist:hasEnteredMarker', function(station, part, partN
       CurrentActionMsg  = _U('open_bossmenu')
       CurrentActionData = {}
 	
-    elseif part == 'Cloakrooms' then
+    elseif part == 'Cloakroom' then
       CurrentAction     = 'menu_cloakroom'
       CurrentActionMsg  = _U('open_cloackroom')
       CurrentActionData = {}
