@@ -136,7 +136,7 @@ Config.Uniforms = {
 		},
 		female = {
 			['tshirt_1'] = 2,  ['tshirt_2'] = 0,
-			['torso_1'] = 43,   ['torso_2'] = 6,
+			['torso_1'] = 43,   ['torso_2'] = 2,
 			['decals_1'] = 0,   ['decals_2'] = 0,
 			['arms'] = 3,
 			['pants_1'] = 11,   ['pants_2'] = 6,
@@ -157,7 +157,7 @@ Config.Uniforms = {
 		},
 		female = {
 			['tshirt_1'] = 2,  ['tshirt_2'] = 0,
-			['torso_1'] = 27,   ['torso_2'] = 3,
+			['torso_1'] = 27,   ['torso_2'] = 2,
 			['decals_1'] = 0,   ['decals_2'] = 0,
 			['arms'] = 3,
 			['pants_1'] = 6,   ['pants_2'] = 0,
