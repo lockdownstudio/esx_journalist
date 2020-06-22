@@ -1,8 +1,9 @@
-resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
+fx_version 'bodacious'
+games { 'gta5' }
 
 description 'ESX Reporter Job'
 
-version '1.0.4'
+version '2.0.0'
 
 server_scripts {
   '@mysql-async/lib/MySQL.lua',
@@ -20,4 +21,10 @@ client_scripts {
   'client/vehicle.lua',
   'locales/fr.lua',
   'locales/en.lua'
+}
+
+dependencies {
+	'es_extended',
+	'esx_billing',
+	'esx_vehicleshop'
 }
