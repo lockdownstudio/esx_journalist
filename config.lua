@@ -5,7 +5,7 @@ Config.MarkerSize                 = {x = 1.5, y = 1.5, z = 0.5}
 Config.MarkerColor                = { r = 102, g = 0, b = 102 }
 Config.EnablePlayerManagement     = true
 Config.EnableVaultManagement      = true
-Config.EnableSocietyOwnedVehicles = true
+Config.EnableSocietyOwnedVehicles = false --disabled to let journalists buy their own vehicles.
 Config.EnableHelicopters          = true
 Config.EnableMoneyWash            = false
 Config.MaxInService               = 30
@@ -159,7 +159,7 @@ Config.Uniforms = {
 			['tshirt_1'] = 2,  ['tshirt_2'] = 0,
 			['torso_1'] = 27,   ['torso_2'] = 2,
 			['decals_1'] = 0,   ['decals_2'] = 0,
-			['arms'] = 3,
+			['arms'] = 0,
 			['pants_1'] = 6,   ['pants_2'] = 0,
 			['shoes_1'] = 42,   ['shoes_2'] = 2,
 			['chain_1'] = 0,  ['chain_2'] = 0
