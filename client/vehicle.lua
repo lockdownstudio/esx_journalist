@@ -265,7 +265,6 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			FreezeEntityPosition(vehicle, true)
 			SetModelAsNoLongerNeeded(data.current.model)
-			ESX.ShowNotification('Your Vehicle is Ready 1')
 
 			if data.current.props then
 				ESX.Game.SetVehicleProperties(vehicle, data.current.props)
@@ -279,7 +278,6 @@ function OpenShopMenu(elements, restoreCoords, shopCoords)
 		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		FreezeEntityPosition(vehicle, true)
 		SetModelAsNoLongerNeeded(elements[1].model)
-		ESX.ShowNotification('Your Vehicle is Ready 2')
 
 		if elements[1].props then
 			ESX.Game.SetVehicleProperties(vehicle, elements[1].props)
