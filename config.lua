@@ -81,7 +81,7 @@ Config.Stations = {
 		Vehicles = {
 			{
 				Spawner = vector3(-535.6, -884.4, 25.3),
-				InsideShop = vector3(-535.6, -884.4, 25.3),
+				InsideShop = vector3(-539.7, -879.83, 30.73),
 				SpawnPoints = {
 					{coords = vector3(-532.7, -892.1, 23.5), heading = 178.34, radius = 6.0},
 				}
@@ -91,7 +91,7 @@ Config.Stations = {
 		Helicopters = {
 			{
 				Spawner = vector3(-570.6, -935.4, 36.8),
-				InsideShop = vector3(-570.6, -935.4, 36.8),
+				InsideShop = vector3(-560.86, -914.32, 36.83),
 				SpawnPoints = {
 					{coords = vector3(-582.8, -930.6, 35.8), heading = 97.6, radius = 10.0}
 				}
@@ -99,8 +99,6 @@ Config.Stations = {
 		}
 
 	}
-
-	
 }
 
 Config.Uniforms = {

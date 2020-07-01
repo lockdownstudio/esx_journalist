@@ -17,7 +17,7 @@ local CurrentActionData       = {}
 local Blips                   = {}
 
 local LastStation, LastPart, LastPartNum
-local isInShopMenu            = false
+isInShopMenu            = false
 
 ESX                           = nil
 
