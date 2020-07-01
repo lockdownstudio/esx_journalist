@@ -99,6 +99,7 @@ Config.Stations = {
 		}
 
 	}
+}
 
 Config.Uniforms = {
 	journalist_outfit = {
